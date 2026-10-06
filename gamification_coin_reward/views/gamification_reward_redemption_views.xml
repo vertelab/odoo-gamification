@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== Redemptions ==================== -->
+    <record id="view_gamification_reward_redemption_tree" model="ir.ui.view">
+        <field name="name">gamification.reward.redemption.list</field>
+        <field name="model">gamification.reward.redemption</field>
+        <field name="arch" type="xml">
+            <list string="Redemptions" decoration-muted="state == 'rejected'"
+                  decoration-success="state == 'delivered'"
+                  decoration-warning="state == 'requested'">
+                <field name="requested_at"/>
+                <field name="user_id"/>
+                <field name="reward_id"/>
+                <field name="cost_paid"/>
+                <field name="state"/>
+                <field name="approved_by" optional="hide"/>
+                <field name="delivered_at" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gamification_reward_redemption_form" model="ir.ui.view">
+        <field name="name">gamification.reward.redemption.form</field>
+        <field name="model">gamification.reward.redemption</field>
+        <field name="arch" type="xml">
+            <form string="Redemption">
+                <header>
+                    <button name="action_approve" type="object"
+                            string="Approve" class="btn-primary"
+                            invisible="state != 'requested'"
+                            groups="gamification_coin_reward.group_reward_manager"/>
+                    <button name="action_reject" type="object"
+                            string="Reject"
+                            invisible="state not in ('requested', 'approved')"
+                            groups="gamification_coin_reward.group_reward_manager"/>
+                    <button name="action_deliver" type="object"
+                            string="Mark Delivered" class="btn-primary"
+                            invisible="state != 'approved'"
+                            groups="gamification_coin_reward.group_reward_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="requested,approved,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="reward_id" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="cost_paid"/>
+                            <field name="requested_at"/>
+                        </group>
+                        <group>
+                            <field name="approved_by"/>
+                            <field name="approved_at"/>
+                            <field name="delivered_by"/>
+                            <field name="delivered_at"/>
+                        </group>
+                    </group>
+                    <group string="Rejection" invisible="state != 'rejected'">
+                        <field name="rejected_by"/>
+                        <field name="rejected_at"/>
+                        <field name="reject_reason"/>
+                    </group>
+                    <notebook>
+                        <page string="Coin Entries" name="coin_entries">
+                            <field name="coin_tracking_ids" readonly="1">
+                                <list create="false" edit="false">
+                                    <field name="tracking_date"/>
+                                    <field name="old_value"/>
+                                    <field name="gain"/>
+                                    <field name="new_value"/>
+                                    <field name="reason"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gamification_reward_redemption_search" model="ir.ui.view">
+        <field name="name">gamification.reward.redemption.search</field>
+        <field name="model">gamification.reward.redemption</field>
+        <field name="arch" type="xml">
+            <search string="Redemptions">
+                <field name="user_id"/>
+                <field name="reward_id"/>
+                <filter name="filter_requested" string="Pending Approval"
+                        domain="[('state', '=', 'requested')]"/>
+                <filter name="filter_approved" string="Approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter name="filter_delivered" string="Delivered"
+                        domain="[('state', '=', 'delivered')]"/>
+                <filter name="filter_rejected" string="Rejected"
+                        domain="[('state', '=', 'rejected')]"/>
+                <separator/>
+                <filter name="filter_my" string="My Redemptions"
+                        domain="[('user_id', '=', uid)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_user" string="User"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_reward" string="Reward"
+                            context="{'group_by': 'reward_id'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- My redemptions -->
+    <record id="action_gamification_reward_redemption_my" model="ir.actions.act_window">
+        <field name="name">My Redemptions</field>
+        <field name="res_model">gamification.reward.redemption</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_filter_my': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No redemptions yet</p>
+            <p>Rewards you redeem will appear here with their status.</p>
+        </field>
+    </record>
+
+    <!-- Approval queue, for managers -->
+    <record id="action_gamification_reward_redemption_approval" model="ir.actions.act_window">
+        <field name="name">Pending Approvals</field>
+        <field name="res_model">gamification.reward.redemption</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_filter_requested': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing to approve</p>
+            <p>Redemptions awaiting your approval will appear here.</p>
+        </field>
+    </record>
+
+    <record id="action_gamification_reward_redemption_all" model="ir.actions.act_window">
+        <field name="name">All Redemptions</field>
+        <field name="res_model">gamification.reward.redemption</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+    </record>
+</odoo>

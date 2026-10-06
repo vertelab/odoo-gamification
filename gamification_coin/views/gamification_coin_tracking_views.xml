@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ledger list: filterable by user, date and reason. -->
+    <record id="view_gamification_coin_tracking_tree" model="ir.ui.view">
+        <field name="name">gamification.coin.tracking.list</field>
+        <field name="model">gamification.coin.tracking</field>
+        <field name="arch" type="xml">
+            <list string="Coin Changes" create="false" edit="false">
+                <field name="tracking_date"/>
+                <field name="user_id"/>
+                <field name="old_value"/>
+                <field name="gain"/>
+                <field name="new_value"/>
+                <field name="origin_ref_model_name" optional="show"/>
+                <field name="reason"/>
+                <field name="consolidated" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gamification_coin_tracking_form" model="ir.ui.view">
+        <field name="name">gamification.coin.tracking.form</field>
+        <field name="model">gamification.coin.tracking</field>
+        <field name="arch" type="xml">
+            <form string="Coin Change" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="tracking_date"/>
+                            <field name="origin_ref_model_name"/>
+                        </group>
+                        <group>
+                            <field name="old_value"/>
+                            <field name="gain"/>
+                            <field name="new_value"/>
+                            <field name="consolidated"/>
+                        </group>
+                    </group>
+                    <group string="Reason">
+                        <field name="reason" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gamification_coin_tracking_search" model="ir.ui.view">
+        <field name="name">gamification.coin.tracking.search</field>
+        <field name="model">gamification.coin.tracking</field>
+        <field name="arch" type="xml">
+            <search string="Coin Changes">
+                <field name="user_id"/>
+                <field name="reason"/>
+                <field name="origin_ref_model_name"/>
+                <filter name="filter_credit" string="Earned"
+                        domain="[('gain', '&gt;', 0)]"/>
+                <filter name="filter_debit" string="Spent"
+                        domain="[('gain', '&lt;', 0)]"/>
+                <separator/>
+                <filter name="filter_consolidated" string="Consolidated"
+                        domain="[('consolidated', '=', True)]"/>
+                <filter name="filter_not_consolidated" string="Not Consolidated"
+                        domain="[('consolidated', '=', False)]"/>
+                <separator/>
+                <filter name="filter_today" string="Today"
+                        domain="[('tracking_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_this_month" string="This Month"
+                        domain="[('tracking_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_user" string="User"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_source" string="Source Type"
+                            context="{'group_by': 'origin_ref_model_name'}"/>
+                    <filter name="group_date" string="Date"
+                            context="{'group_by': 'tracking_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_gamification_coin_tracking" model="ir.actions.act_window">
+        <field name="name">Coin Changes</field>
+        <field name="res_model">gamification.coin.tracking</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gamification_coin_tracking_search"/>
+        <field name="context">{'search_default_filter_not_consolidated': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No coin changes yet
+            </p>
+            <p>
+                Every coin credited or spent is recorded here. Entries are
+                immutable — the ledger is the single source of truth for a
+                user's balance.
+            </p>
+        </field>
+    </record>
+</odoo>

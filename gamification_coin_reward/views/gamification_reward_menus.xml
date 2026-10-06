@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== User-facing: the shop ==================== -->
+    <menuitem id="menu_gamification_reward_root"
+              name="Rewards"
+              web_icon="gamification_coin_reward,static/description/icon.png"
+              sequence="85"
+              groups="group_reward_user"/>
+
+    <menuitem id="menu_gamification_reward_shop"
+              name="Shop"
+              parent="menu_gamification_reward_root"
+              action="action_gamification_reward_shop"
+              sequence="10"/>
+
+    <menuitem id="menu_gamification_reward_redemption_my"
+              name="My Redemptions"
+              parent="menu_gamification_reward_root"
+              action="action_gamification_reward_redemption_my"
+              sequence="20"/>
+
+    <!-- ==================== Manager-facing ==================== -->
+    <menuitem id="menu_gamification_reward_approval"
+              name="Pending Approvals"
+              parent="menu_gamification_reward_root"
+              action="action_gamification_reward_redemption_approval"
+              sequence="30"
+              groups="group_reward_manager"/>
+
+    <menuitem id="menu_gamification_reward_config"
+              name="Configuration"
+              parent="menu_gamification_reward_root"
+              sequence="90"
+              groups="group_reward_manager"/>
+
+    <menuitem id="menu_gamification_reward_rewards"
+              name="Rewards"
+              parent="menu_gamification_reward_config"
+              action="action_gamification_reward"
+              sequence="10"
+              groups="group_reward_manager"/>
+
+    <menuitem id="menu_gamification_reward_categories"
+              name="Categories"
+              parent="menu_gamification_reward_config"
+              action="action_gamification_reward_category"
+              sequence="20"
+              groups="group_reward_manager"/>
+
+    <menuitem id="menu_gamification_reward_redemption_all"
+              name="All Redemptions"
+              parent="menu_gamification_reward_config"
+              action="action_gamification_reward_redemption_all"
+              sequence="30"
+              groups="group_reward_manager"/>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Coin Manager: may review the ledger and adjust balances manually. -->
+    <record id="module_category_gamification_coin" model="ir.module.category">
+        <field name="name">Coin</field>
+        <field name="sequence">161</field>
+    </record>
+
+    <record id="group_coin_manager" model="res.groups">
+        <field name="name">Coin Manager</field>
+        <field name="category_id" ref="module_category_gamification_coin"/>
+        <field name="comment">May review the coin ledger and adjust balances manually.</field>
+    </record>
+
+    <!-- Regular users may read their own ledger entries, but not modify them. -->
+    <record id="rule_coin_tracking_own" model="ir.rule">
+        <field name="name">Coin tracking: own entries only</field>
+        <field name="model_id" ref="model_gamification_coin_tracking"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Managers see the whole ledger. -->
+    <record id="rule_coin_tracking_manager" model="ir.rule">
+        <field name="name">Coin tracking: all entries (manager)</field>
+        <field name="model_id" ref="model_gamification_coin_tracking"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_coin_manager'))]"/>
+    </record>
+</odoo>

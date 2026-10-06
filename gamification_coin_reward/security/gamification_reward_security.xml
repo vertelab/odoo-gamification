@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_gamification_reward" model="ir.module.category">
+        <field name="name">Rewards</field>
+        <field name="sequence">162</field>
+    </record>
+
+    <!-- Reward User: may browse the shop and request rewards. -->
+    <record id="group_reward_user" model="res.groups">
+        <field name="name">Reward User</field>
+        <field name="category_id" ref="module_category_gamification_reward"/>
+        <field name="comment">May browse the reward shop and request rewards.</field>
+    </record>
+
+    <!-- Reward Manager: may configure rewards and approve redemptions. -->
+    <record id="group_reward_manager" model="res.groups">
+        <field name="name">Reward Manager</field>
+        <field name="category_id" ref="module_category_gamification_reward"/>
+        <field name="implied_ids" eval="[(4, ref('group_reward_user'))]"/>
+        <field name="comment">May configure rewards and approve or reject redemptions.</field>
+    </record>
+
+    <!-- Users see their own redemptions; managers see all. -->
+    <record id="rule_redemption_own" model="ir.rule">
+        <field name="name">Redemption: own only</field>
+        <field name="model_id" ref="model_gamification_reward_redemption"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_reward_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_redemption_manager" model="ir.rule">
+        <field name="name">Redemption: all (manager)</field>
+        <field name="model_id" ref="model_gamification_reward_redemption"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_reward_manager'))]"/>
+    </record>
+</odoo>

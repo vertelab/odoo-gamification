@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Review menu: the whole ledger, for Coin Managers. -->
+    <menuitem id="menu_gamification_coin_root"
+              name="Coins"
+              parent="base.menu_administration"
+              sequence="91"
+              groups="group_coin_manager"/>
+
+    <menuitem id="menu_gamification_coin_tracking"
+              name="Coin Changes"
+              parent="menu_gamification_coin_root"
+              action="action_gamification_coin_tracking"
+              sequence="10"
+              groups="group_coin_manager"/>
+</odoo>

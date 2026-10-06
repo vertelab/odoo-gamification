@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+reward_category_user,"Reward Category: read",model_gamification_reward_category,group_reward_user,1,0,0,0
+reward_category_manager,"Reward Category: manage",model_gamification_reward_category,group_reward_manager,1,1,1,1
+reward_user,"Reward: read",model_gamification_reward,group_reward_user,1,0,0,0
+reward_manager,"Reward: manage",model_gamification_reward,group_reward_manager,1,1,1,1
+redemption_user,"Redemption: request",model_gamification_reward_redemption,group_reward_user,1,1,1,0
+redemption_manager,"Redemption: manage",model_gamification_reward_redemption,group_reward_manager,1,1,1,1

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== Categories ==================== -->
+    <record id="view_gamification_reward_category_tree" model="ir.ui.view">
+        <field name="name">gamification.reward.category.list</field>
+        <field name="model">gamification.reward.category</field>
+        <field name="arch" type="xml">
+            <list string="Reward Categories" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="reward_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gamification_reward_category" model="ir.actions.act_window">
+        <field name="name">Reward Categories</field>
+        <field name="res_model">gamification.reward.category</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ==================== Rewards (config) ==================== -->
+    <record id="view_gamification_reward_tree" model="ir.ui.view">
+        <field name="name">gamification.reward.list</field>
+        <field name="model">gamification.reward</field>
+        <field name="arch" type="xml">
+            <list string="Rewards">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="cost"/>
+                <field name="stock"/>
+                <field name="limit_per_user"/>
+                <field name="requires_approval"/>
+                <field name="redemption_count"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gamification_reward_form" model="ir.ui.view">
+        <field name="name">gamification.reward.form</field>
+        <field name="model">gamification.reward</field>
+        <field name="arch" type="xml">
+            <form string="Reward">
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar"
+                           options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. En ledig dag"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="cost"/>
+                            <field name="stock"/>
+                        </group>
+                        <group>
+                            <field name="limit_per_user"/>
+                            <field name="requires_approval"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="What the reward is and any conditions"/>
+                        </page>
+                        <page string="Competitions" name="competitions">
+                            <field name="challenge_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="period"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Redemptions" name="redemptions">
+                            <field name="redemption_ids" readonly="1">
+                                <list>
+                                    <field name="requested_at"/>
+                                    <field name="user_id"/>
+                                    <field name="state"/>
+                                    <field name="cost_paid"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gamification_reward" model="ir.actions.act_window">
+        <field name="name">Rewards</field>
+        <field name="res_model">gamification.reward</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ==================== Shop (kanban) ==================== -->
+    <record id="view_gamification_reward_kanban" model="ir.ui.view">
+        <field name="name">gamification.reward.kanban</field>
+        <field name="model">gamification.reward</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="cost"/>
+                <field name="stock"/>
+                <field name="category_id"/>
+                <field name="image_128"/>
+                <field name="can_afford"/>
+                <field name="in_stock"/>
+                <field name="available"/>
+                <field name="requires_approval"/>
+                <field name="challenge_ids"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column h-100">
+                            <div t-if="record.challenge_ids.raw_value.length"
+                                 class="alert alert-info py-1 px-2 mb-2 small">
+                                <i class="fa fa-trophy me-1"/>
+                                <t t-esc="record.challenge_ids.raw_value.length"/>
+                                <t> tävling(ar)</t>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <field name="image_128" widget="image"
+                                       class="me-2 o_image_64_cover"/>
+                                <div class="flex-grow-1">
+                                    <strong><field name="name"/></strong>
+                                    <div class="text-muted">
+                                        <field name="category_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-auto">
+                                <span class="badge rounded-pill text-bg-primary">
+                                    <i class="fa fa-money me-1"/>
+                                    <field name="cost"/>
+                                </span>
+                                <span t-if="!record.in_stock.raw_value"
+                                      class="badge rounded-pill text-bg-danger">
+                                    Slut
+                                </span>
+                                <span t-elif="!record.can_afford.raw_value"
+                                      class="badge rounded-pill text-bg-secondary">
+                                    För dyrt
+                                </span>
+                                <span t-else=""
+                                      class="badge rounded-pill text-bg-success">
+                                    Tillgänglig
+                                </span>
+                            </div>
+                            <button name="action_redeem"
+                                    type="object"
+                                    class="btn btn-sm btn-primary mt-2"
+                                    t-att-disabled="!record.available.raw_value">
+                                Lös in
+                            </button>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_gamification_reward_shop" model="ir.actions.act_window">
+        <field name="name">Reward Shop</field>
+        <field name="res_model">gamification.reward</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('active', '=', True)]</field>
+        <field name="context">{'search_default_group_category': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No rewards available</p>
+            <p>Rewards you can buy with your coins will appear here.</p>
+        </field>
+    </record>
+</odoo>

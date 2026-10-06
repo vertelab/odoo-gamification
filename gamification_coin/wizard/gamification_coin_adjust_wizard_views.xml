@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gamification_coin_adjust_wizard_form" model="ir.ui.view">
+        <field name="name">gamification.coin.adjust.wizard.form</field>
+        <field name="model">gamification.coin.adjust.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Adjust Coin Balance">
+                <group>
+                    <field name="user_id"/>
+                    <field name="gain"/>
+                    <field name="reason" placeholder="Why is the balance being adjusted?"/>
+                </group>
+                <footer>
+                    <button name="action_apply" string="Apply" type="object"
+                            class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gamification_coin_adjust_wizard" model="ir.actions.act_window">
+        <field name="name">Adjust Coin Balance</field>
+        <field name="res_model">gamification.coin.adjust.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
