@@ -21,7 +21,7 @@ redemption is approved, and never more than the balance allows.
 This module is a consumer of ``gamification_coin`` and is independent of any
 other consumer. It knows nothing about rollout.
 """,
-    'author': 'Vertel AB',
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se',
     'license': 'LGPL-3',
     'depends': ['gamification_coin', 'gamification'],

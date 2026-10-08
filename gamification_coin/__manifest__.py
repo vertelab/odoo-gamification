@@ -22,7 +22,7 @@ This module is independent of any consumer. It knows only that someone
 credited or debited coins, and where it came from (``origin_ref``). Any module
 can credit coins without being a dependency.
 """,
-    'author': 'Vertel AB',
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se',
     'license': 'LGPL-3',
     'depends': ['gamification'],
